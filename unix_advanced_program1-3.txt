@@ -1,0 +1,63 @@
+关键文件
+	用户组： /etc/group
+  	每个文件系统都存放了该文件的所有者UID和GID；存放需要4个字节
+    /etc/passwd包含登陆名和用户ID之间的映射关系；/etc/group文件包含组名和组ID之间的映射关系；
+
+附加组ID： 一个用户属于其他组，这个组ID叫做附加组ID；
+
+信号：通知进程发生某种情况的技术；是内核发送给进程的；
+	进程处理信号有三种方式：（1）忽略；（2）使用系统默认的处理方式（3）自定义信号处理函数，信号发生时调用此函数，捕捉该信号；
+
+Unix时间：
+	日历时间和进程时间即CPU时间，系统clock_t保存这种时间，sysconf函数获取该时间；
+    Unix系统使用三个维度度量进程时间：时钟时间，用户CPU时间，系统CPU时间；
+
+time命令 time -p
+
+系统调用和库函数
+	操作系统提供多种服务的入口点，用户程序由此向内核请求服务，这些入口点称为系统调用；
+    UNIX提供的技术是在标准库中定义一个同名的函数，用户程序通过标准C调用序列来调用这些函数；
+
+
+文件I/O
+	基本文件I/O函数：open(), write(), read(), lseek(), close();
+   	不同缓存区大小对I/O的影响；
+    不带缓冲：每个read或write直接调用系统调用；
+    多进程间共享资源，原子操作概念很重要，通过文件I/O和open函数来进行讨论；
+
+	文件描述符：所有打开的文件都是通过文件描述符来引用的，是一个非负整数，当创建或打开一个文件时，内核返回一个文件描述符；读写文件时，传入文件描述符；
+    STDIN_FILENO,STDOUT_FILENO, STDERR_FILENO(定义在unistd.h中）
+    文件描述符范围0-OPEN_MAX
+
+	#include<fcntl.h>
+    打开函数：
+    int open(const char *,int oflag, .../*mode_t mode*/);
+    oflag: O_RDONLY  O_WRONLY  O_RDWR
+    	可选： O_APPEND  O_CREAT O_EXCL  O_TRUNC  O_OCTTY  O_NONBLOCK
+        O_DSYNC   O_RSYNC   O_SYNC
+
+	创建函数：
+	int create(const char *path, mode_t mode)
+    等价于
+    int open(const char *path, O_WRONLY | O_CREAT | O_TRUNC, mode_t mode);
+
+	关闭函数：
+	close(int fd)， 同时释放加在文件上的所有锁；
+
+	当前文件偏移量，度量从文件开始处计算的字节数，通常文件读写操作都是从当前文件偏移量开始，
+    默认是0，除非指定O_APPEND
+
+	#include<unistd.h>
+    off_t lseek(int fd, off_t offset, int whence);
+    whence: SEEK_SET  SEEK_CUR   SEEK_END
+    比较lseek返回等于-1
+
+
+
+	
+
+	
+
+
+    
+    
